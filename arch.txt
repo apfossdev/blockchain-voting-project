@@ -1,0 +1,36 @@
+Blockchain Voting WebApp Architecture
+
+Landing Page
+    1. Some text content related to app
+    2. Connect Wallet Functionality
+        - if the wallet address is admin, should go to the admin route -> later addAdmin Functionality to you deploy to create a
+        - else should go to the user route
+
+Admin
+    1. Create new elections Button
+        - Input Election name, Candidate Names and their respective photos (storage using ipfs for cheaper costs), election duration
+        - Create Election button
+    2. View Results of elections Button
+        - Show all the elections created till date
+        - When an election is clicked, it will show ->
+            - it will just show how many votes each candidate has got till then
+                - if time over, will show the Winning Candidate Banner at the bottom
+
+User
+    1. Choose an election
+        - all the created elections till now will be displayed on the dashboard
+        - once the selected election is chosen
+            - the election name, candidates names and their respective photos, how much time for the election to end is running as a timer
+            - Vote now! button
+                - if the timer > 0
+                    - the vote button, then takes the qr of the aadhar as an input to input into the anon aadhar zkp
+                        - if already voted it shouldn't allow to vote and reply with already voted in this election
+                        - if not voted yet,
+                            - if above 18, which we get from AnonAadhar -------------------------------------------------------------------------
+                                - should register the vote in the blockchain and increase the vote of the following candidate by 1
+                                - the dashboard with candidates votes
+                            - else
+                                - send alert that vote couldn't be registered as age below 18 ---------------------------------------------------------------
+                - if timer == 0
+                    - just show the candidates name and info and,
+                    - will show the Winning Candidate Banner at the bottom
