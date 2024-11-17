@@ -19,7 +19,6 @@
 // private
 // view & pure functions
 
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -27,14 +26,13 @@ pragma solidity ^0.8.0;
  * @title Blockchain Voting Smart Contract
  * @author Annamalai Prabu 
  * @dev This contract allows admins to create elections and users to vote.
- *      Admins can create elections with candidates and their IPFS-stored photos.
+ *      Admins can create elections with candidates
  */
 
 contract BlockchainVotingContract {
     // ----- Type Declarations -----
     struct Candidate {
         string name; //name of the candidate
-        string photoHash; //IPFS hash of the photo of the candidate
         uint256 votes; //number of votes the candidate has received
     }
 
@@ -105,15 +103,14 @@ contract BlockchainVotingContract {
     function createElection(
         string memory _electionName, // Election name
         uint256 _duration, //Duration of the election in seconds
-        string[] memory _candidateNames, //An array of candidate names
-        string[] memory _candidatePhotoHashes //An array of IPFS hashes of the candidate photos
+        string[] memory _candidateNames //An array of candidate names
     )
         public
         onlyAdmin // only allow the admin to call this function
     {
-        if(_candidateNames.length != _candidatePhotoHashes.length || _candidateNames.length == 0) {
+        if(_candidateNames.length == 0) {
             revert InvalidElectionSetup();
-        } //prevent election from happening if the array lengths don't match or if the arrays are empty
+        } //prevent election from happening if the array length is 0
 
         electionsCount++; // increment the election count (every new election gets a new ID then)
         Election storage newElection = elections[electionsCount]; // create a new election, here elections count is used as the ID and elections is a mapping where each election ID (a unique number) maps to an election (a struct with candidate names, votes, etc.).
@@ -126,7 +123,6 @@ contract BlockchainVotingContract {
         for (uint256 i = 0; i < _candidateNames.length; i++) {
             newElection.candidates[i] = Candidate({
                 name: _candidateNames[i],
-                photoHash: _candidatePhotoHashes[i],
                 votes: 0
             }); //here we are creating a new candidate and adding it to the election
             newElection.candidatesCount++; //increment the number of candidates by 1 in each iteration in the election
@@ -195,11 +191,11 @@ contract BlockchainVotingContract {
         public 
         view 
         electionExists(_electionId)
-        returns (string memory name, string memory photoHash, uint256 votes) 
+        returns (string memory name, uint256 votes) 
     {
         if (_candidateId >= elections[_electionId].candidatesCount) revert InvalidCandidate();
         Candidate storage candidate = elections[_electionId].candidates[_candidateId];
-        return (candidate.name, candidate.photoHash, candidate.votes);
+        return (candidate.name, candidate.votes);
     }
 
     function getElectionInfo(uint256 _electionId)
